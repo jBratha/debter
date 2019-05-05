@@ -1,0 +1,27 @@
+spring.profiles:
+  active: h2
+#  active: mysql
+server:
+  port: 8081
+
+---
+
+spring:
+  profiles: mysql
+  datasource:
+    url: jdbc:mysql://HOST:PORT/DB
+    username:
+    password:
+
+---
+
+spring:
+  profiles: h2
+  h2:
+    console:
+      path: /h2
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
