@@ -1,3 +1,4 @@
+# This file is a "template" of what your application.yml file should look like
 spring.profiles:
   active: h2
 #  active: mysql
@@ -12,6 +13,10 @@ spring:
     url: jdbc:mysql://HOST:PORT/DB
     username:
     password:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
 
 ---
 
