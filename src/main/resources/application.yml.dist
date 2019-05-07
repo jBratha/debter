@@ -29,4 +29,23 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-    show-sql: false
+    show-sql: true
+  datasource:
+    initialization-mode: always
+    username: sa
+    password:
+    url: jdbc:h2:mem:testdb
+
+
+---
+
+spring:
+  profiles: jwt
+jwt:
+  header: Authorization
+  secret: changeit
+  expiration: 604800
+  route:
+    authentication:
+      path: auth
+      refresh: refresh
