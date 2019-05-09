@@ -1,4 +1,8 @@
 package net.ddns.jaronsky.debter.security.service
 
-class JwtAuthenticationResponse(val token: String) {
-}
+import net.ddns.jaronsky.debter.model.security.AuthorityName
+
+class JwtAuthenticationResponse(
+        val token: String,
+        val authorities: List<AuthorityName?> = arrayListOf()
+)

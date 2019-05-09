@@ -1,5 +1,6 @@
 package net.ddns.jaronsky.debter.security.controller
 
+import net.ddns.jaronsky.debter.rest.service.UserService
 import net.ddns.jaronsky.debter.security.JwtAuthenticationRequest
 import net.ddns.jaronsky.debter.security.properties.JwtProperties
 import net.ddns.jaronsky.debter.security.JwtTokenUtil
@@ -8,9 +9,7 @@ import net.ddns.jaronsky.debter.security.service.JwtAuthenticationResponse
 import java.util.Objects
 import javax.servlet.http.HttpServletRequest
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
@@ -26,7 +25,8 @@ class AuthenticationRestController(
         private val jwtTokenUtil: JwtTokenUtil? = null,
         private val jwtProperties: JwtProperties,
         @Qualifier("jwtUserDetailsService")
-        private val userDetailsService: UserDetailsService? = null
+        private val userDetailsService: UserDetailsService? = null,
+        private val userService: UserService
 
 ) {
 
@@ -39,9 +39,10 @@ class AuthenticationRestController(
         // Reload password post-security so we can generate the token
         val userDetails = userDetailsService!!.loadUserByUsername(authenticationRequest.username)
         val token = jwtTokenUtil!!.generateToken(userDetails)
+        val roles = userService.getAuthorities(authenticationRequest.username);
 
         // Return the token
-        return ResponseEntity.ok<Any>(JwtAuthenticationResponse(token))
+        return ResponseEntity.ok<Any>(JwtAuthenticationResponse(token, roles))
     }
 
     @GetMapping(value = ["\${jwt.route.authentication.refresh}"])

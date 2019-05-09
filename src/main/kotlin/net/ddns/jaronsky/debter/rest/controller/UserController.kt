@@ -1,6 +1,7 @@
 package net.ddns.jaronsky.debter.rest.controller
 
 import net.ddns.jaronsky.debter.model.UserDTO
+import net.ddns.jaronsky.debter.rest.model.RegisterUser
 import net.ddns.jaronsky.debter.rest.service.UserService
 import net.ddns.jaronsky.debter.security.JwtUser
 import org.springframework.security.access.prepost.PreAuthorize
@@ -31,6 +32,11 @@ class UserController (
     @PreAuthorize("isFullyAuthenticated()")
     fun currentUserInfo(): JwtUser {
         return userService.infoAboutYourself();
+    }
+
+    @PostMapping("/register")
+    fun registerUser(@RequestBody user: RegisterUser) {
+        userService.registerUser(user);
     }
 
 }

@@ -102,6 +102,7 @@ class WebSecurityConfig(
                 .antMatchers("/h2/**/**").permitAll()
 
                 .antMatchers("/auth/**").permitAll()
+                .antMatchers("/api/users/register").permitAll()
                 .anyRequest().authenticated()
 
         httpSecurity
