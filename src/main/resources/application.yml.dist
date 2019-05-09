@@ -1,6 +1,6 @@
 # This file is a "template" of what your application.yml file should look like
 spring.profiles:
-  active: h2
+  active: h2,jwt
 #  active: mysql
 server:
   port: 8081
