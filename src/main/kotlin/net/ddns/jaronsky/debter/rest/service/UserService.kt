@@ -1,6 +1,5 @@
 package net.ddns.jaronsky.debter.rest.service
 
-import net.ddns.jaronsky.debter.model.UserDTO
 import net.ddns.jaronsky.debter.model.security.Authority
 import net.ddns.jaronsky.debter.model.security.AuthorityName
 import net.ddns.jaronsky.debter.model.security.User
@@ -26,13 +25,13 @@ class UserService(
 ) {
 
     @PreAuthorize("hasRole('ADMIN')")
-    fun findAll(): List<UserDTO> {
-        return jwtUserDetailsService.fetchUsers();
+    fun findAll(): List<User> {
+        return jwtUserDetailsService.getAll()
     }
 
     @Throws(UsernameNotFoundException::class)
     fun getAuthorities(username: String): List<AuthorityName?> {
-        return jwtUserDetailsService.getAuthorities(username);
+        return jwtUserDetailsService.getAuthorities(username)
     }
 
     @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
@@ -42,6 +41,8 @@ class UserService(
     }
 
     fun infoAboutYourself(): JwtUser {
+        val x = SecurityContextHolder.getContext().authentication.authorities.map { a -> a.authority!! }.contains(AuthorityName.ROLE_ADMIN.name)
+        System.err.println(x)
         return jwtUserDetailsService.loadUserByUsername(SecurityContextHolder.getContext().authentication.name) as JwtUser
     }
 
@@ -50,6 +51,6 @@ class UserService(
                 User.newUser(
                         user,
                         passwordEncoder.encode(user.password),
-                        arrayListOf(Authority(name = AuthorityName.ROLE_USER))));
+                        arrayListOf(Authority(name = AuthorityName.ROLE_USER))))
     }
 }

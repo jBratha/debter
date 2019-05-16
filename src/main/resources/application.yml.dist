@@ -3,14 +3,14 @@ spring.profiles:
   active: h2,jwt
 #  active: mysql
 server:
-  port: 8081
+  port: 8086
 
 ---
 
 spring:
   profiles: mysql
   datasource:
-    url: jdbc:mysql://HOST:PORT/DB
+    url: jdbc:mysql://HOST:PORT/DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     username:
     password:
   jpa:
@@ -22,6 +22,10 @@ spring:
 
 spring:
   profiles: h2
+  datasource:
+    username: sa
+    password:
+    url: jdbc:h2:mem:testdb
   h2:
     console:
       path: /h2
@@ -29,13 +33,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-    show-sql: true
-  datasource:
-    initialization-mode: always
-    username: sa
-    password:
-    url: jdbc:h2:mem:testdb
-
+    show-sql: false
 
 ---
 
@@ -49,3 +47,17 @@ jwt:
     authentication:
       path: auth
       refresh: refresh
+---
+spring:
+  profiles: ssl
+server:
+  port: 8085
+  tomcat.remote_ip_header: x-forwarded-for
+  tomcat.protocol_header: x-forwarded-proto
+  ssl:
+    key-password:
+    key-store:
+    key-store-type:
+    key-store-password:
+    key-alias: tomcat
+http.port: 8086

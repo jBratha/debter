@@ -12,7 +12,7 @@ import java.util.*
  */
 
 class JwtUser(
-        @JsonIgnore private val id: Long?,
+        val id: Long?,
         private val username: String,
         private val firstname: String,
         private val lastname: String,
@@ -57,5 +57,17 @@ class JwtUser(
     @JsonIgnore
     fun getLastPasswordResetDate(): Date {
         return lastPasswordResetDate
+    }
+
+    override fun toString(): String {
+        return "" +
+                "${username}, " +
+                "${firstname}, " +
+                "${lastname}, " +
+                "${email}, " +
+                "${authorities.joinToString()}, " +
+                "${enabled}, " +
+                "${lastPasswordResetDate} "
+
     }
 }

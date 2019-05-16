@@ -7,7 +7,6 @@ import net.ddns.jaronsky.debter.security.service.JwtUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.EnableAspectJAutoProxy
 import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -23,10 +22,10 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.crypto.password.StandardPasswordEncoder
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.web.cors.CorsConfigurationSource
-import java.util.*
 import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import java.util.*
 
 
 @Configuration
@@ -86,6 +85,10 @@ class WebSecurityConfig(
 
     @Throws(Exception::class)
     override fun configure(httpSecurity: HttpSecurity) {
+//        httpSecurity
+//                .requiresChannel()
+//                .antMatchers("/**").requiresSecure()
+
         httpSecurity
                 // we don't need CSRF because our token is invulnerable
                 .csrf().disable()

@@ -1,6 +1,6 @@
 package net.ddns.jaronsky.debter.rest.controller
 
-import net.ddns.jaronsky.debter.model.UserDTO
+import net.ddns.jaronsky.debter.model.security.User
 import net.ddns.jaronsky.debter.rest.model.RegisterUser
 import net.ddns.jaronsky.debter.rest.service.UserService
 import net.ddns.jaronsky.debter.security.JwtUser
@@ -19,24 +19,26 @@ class UserController (
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    fun listUser(): List<UserDTO> {
-        return userService.findAll();
+    fun listUser(): List<User> {
+        val u = userService.findAll()
+//        u.forEach { user -> user.password = null }
+        return u
     }
 
     @GetMapping("/name/{user}")
     fun userInfo(@PathVariable("user") username: String): JwtUser {
-        return userService.findUserByName(username);
+        return userService.findUserByName(username)
     }
 
     @GetMapping("/me")
     @PreAuthorize("isFullyAuthenticated()")
     fun currentUserInfo(): JwtUser {
-        return userService.infoAboutYourself();
+        return userService.infoAboutYourself()
     }
 
     @PostMapping("/register")
     fun registerUser(@RequestBody user: RegisterUser) {
-        userService.registerUser(user);
+        userService.registerUser(user)
     }
 
 }

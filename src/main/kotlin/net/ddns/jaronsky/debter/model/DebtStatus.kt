@@ -5,7 +5,6 @@ package net.ddns.jaronsky.debter.model
  *
  */
 
-class UserInfo(
-
-) {
+enum class DebtStatus {
+    NOT_CONFIRMED, CONFIRMED, RESOLVED
 }

@@ -1,5 +1,6 @@
 package net.ddns.jaronsky.debter.model.security
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -17,9 +18,7 @@ class Authority(
         @Enumerated(EnumType.STRING)
         var name: AuthorityName? = null,
 
+        @JsonIgnore
         @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
         var users: List<User>? = null
-) {
-
-
-}
+)

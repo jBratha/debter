@@ -2,13 +2,10 @@ package net.ddns.jaronsky.debter.security.controller
 
 import net.ddns.jaronsky.debter.rest.service.UserService
 import net.ddns.jaronsky.debter.security.JwtAuthenticationRequest
-import net.ddns.jaronsky.debter.security.properties.JwtProperties
 import net.ddns.jaronsky.debter.security.JwtTokenUtil
 import net.ddns.jaronsky.debter.security.JwtUser
+import net.ddns.jaronsky.debter.security.properties.JwtProperties
 import net.ddns.jaronsky.debter.security.service.JwtAuthenticationResponse
-import java.util.Objects
-import javax.servlet.http.HttpServletRequest
-
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -18,6 +15,8 @@ import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.web.bind.annotation.*
+import java.util.*
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 class AuthenticationRestController(
@@ -39,10 +38,11 @@ class AuthenticationRestController(
         // Reload password post-security so we can generate the token
         val userDetails = userDetailsService!!.loadUserByUsername(authenticationRequest.username)
         val token = jwtTokenUtil!!.generateToken(userDetails)
-        val roles = userService.getAuthorities(authenticationRequest.username);
+        val roles = userService.getAuthorities(authenticationRequest.username)
+        val username = authenticationRequest.username
 
         // Return the token
-        return ResponseEntity.ok<Any>(JwtAuthenticationResponse(token, roles))
+        return ResponseEntity.ok<Any>(JwtAuthenticationResponse(username, token, roles))
     }
 
     @GetMapping(value = ["\${jwt.route.authentication.refresh}"])
@@ -52,9 +52,9 @@ class AuthenticationRestController(
         val username = jwtTokenUtil!!.getUsernameFromToken(token)
         val user = userDetailsService!!.loadUserByUsername(username) as JwtUser
 
-        if (jwtTokenUtil!!.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
-            val refreshedToken = jwtTokenUtil!!.refreshToken(token)
-            return ResponseEntity.ok<Any>(JwtAuthenticationResponse(refreshedToken))
+        if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
+            val refreshedToken = jwtTokenUtil.refreshToken(token)
+            return ResponseEntity.ok<Any>(JwtAuthenticationResponse(token = refreshedToken))
         } else {
             return ResponseEntity.badRequest().body<Any>(null)
         }

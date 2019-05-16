@@ -1,18 +1,22 @@
 package net.ddns.jaronsky.debter.model.security
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonInclude
 import net.ddns.jaronsky.debter.rest.model.RegisterUser
+import java.io.Serializable
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 @Entity
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "USER")
 class User(
         @Id
 //        @Column(name = "ID")
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-        @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1, initialValue = 3) //TODO remove initialValue
+        @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", initialValue = 3) //TODO remove initialValue
         var id: Long? = null,
 
 //        @Column(name = "USERNAME", length = 50, unique = true)
@@ -23,6 +27,7 @@ class User(
 
 //        @Column(name = "PASSWORD", length = 100)
         @NotNull
+        @JsonIgnore
         @Size(min = 4, max = 100)
         var password: String? = null,
 
@@ -54,7 +59,7 @@ class User(
         @JoinTable(name = "USER_AUTHORITY", joinColumns = arrayOf(JoinColumn(name = "USER_ID", referencedColumnName = "ID")),
                 inverseJoinColumns = arrayOf(JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")))
         var authorities: List<Authority>? = null
-) {
+) : Serializable {
     companion object {
         fun newUser(newUser: RegisterUser, password: String, authorities: List<Authority>): User {
             return User(
@@ -70,6 +75,19 @@ class User(
         }
     }
 
+    override fun toString(): String {
+        return "User[" +
+                "${id}, " +
+                "${username}, " +
+                "${password}, " +
+                "${firstname}, " +
+                "${lastname}, " +
+                "${email}, " +
+                "${enabled}, " +
+                "${lastPasswordResetDate}, " +
+                "${authorities?.map { x -> x.name?.name }?.joinToString()}] "
+
+    }
 //    @Id
 //    @Column(name = "ID")
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
