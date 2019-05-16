@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest
 class AuthenticationRestController(
         private val authenticationManager: AuthenticationManager? = null,
         private val jwtTokenUtil: JwtTokenUtil? = null,
-        private val jwtProperties: JwtProperties,
+        @Suppress("SpringJavaInjectionPointsAutowiringInspection") private val jwtProperties: JwtProperties,
         @Qualifier("jwtUserDetailsService")
         private val userDetailsService: UserDetailsService? = null,
         private val userService: UserService

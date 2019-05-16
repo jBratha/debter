@@ -36,7 +36,7 @@ class WebSecurityConfig(
         private val unauthorizedHandler: JwtAuthenticationEntryPoint,
         private val jwtUserDetailsService: JwtUserDetailsService,
         internal var authenticationTokenFilter: JwtAuthorizationTokenFilter,
-        internal var jwtProperties: JwtProperties
+        @Suppress("SpringJavaInjectionPointsAutowiringInspection") internal var jwtProperties: JwtProperties
 
 ) : WebSecurityConfigurerAdapter() {
 
