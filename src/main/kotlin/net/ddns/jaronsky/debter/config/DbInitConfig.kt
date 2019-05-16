@@ -1,5 +1,7 @@
 package net.ddns.jaronsky.debter.config
 
+import lombok.extern.slf4j.Slf4j
+import net.ddns.jaronsky.debter.rest.service.Log
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 import org.springframework.core.io.ClassPathResource
@@ -13,15 +15,27 @@ import javax.sql.DataSource
  *
  */
 
+@Slf4j
 @Component
-@Profile("h2")
+@Profile("init")
 class DbInitConfig(
         private val dataSource: DataSource
 ) {
+    companion object : Log()
 
     @Bean
-    fun runOnce() {
-        ScriptUtils.executeSqlScript(dataSource.connection, EncodedResource(ClassPathResource("data/data-h2.sql")))
+    @Profile("h2")
+    fun initWhenH2() {
+        val script = "data/data-h2.sql"
+        logger.info("Initializing H2 DB with script\'$script\'")
+        ScriptUtils.executeSqlScript(dataSource.connection, EncodedResource(ClassPathResource(script)))
     }
 
+    @Bean
+    @Profile("mysql")
+    fun initWhenMysql() {
+        val script = "data/data-mysql.sql"
+        logger.info("Initializing Mysql DB with script\'$script\'")
+        ScriptUtils.executeSqlScript(dataSource.connection, EncodedResource(ClassPathResource(script)))
+    }
 }
