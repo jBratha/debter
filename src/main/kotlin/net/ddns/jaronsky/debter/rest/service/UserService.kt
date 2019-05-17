@@ -35,7 +35,7 @@ class UserService(
     }
 
     @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
-    fun findUserByName(username: String): JwtUser {
+    fun findJwtUserByName(username: String): JwtUser {
         val jwtUser = jwtUserDetailsService.loadUserByUsername(username)
         return jwtUser as JwtUser
     }
@@ -52,5 +52,9 @@ class UserService(
                         user,
                         passwordEncoder.encode(user.password),
                         arrayListOf(Authority(name = AuthorityName.ROLE_USER))))
+    }
+
+    fun findUserByName(name: String): User {
+        return jwtUserDetailsService.getUserByName(name)
     }
 }

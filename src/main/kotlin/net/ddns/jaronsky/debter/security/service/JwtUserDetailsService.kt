@@ -27,13 +27,23 @@ class JwtUserDetailsService(
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(username: String): UserDetails {
+        return JwtUserFactory.create(getUserByName(username))
+
+//        val user = userRepository.findByUsername(username)
+//
+//        return if (user == null) {
+//            throw UsernameNotFoundException(String.format("No user found with username '%s'.", username))
+//        } else {
+//            JwtUserFactory.create(user)
+//        }
+    }
+
+    fun getUserByName(username: String): User {
         val user = userRepository.findByUsername(username)
 
         return if (user == null) {
             throw UsernameNotFoundException(String.format("No user found with username '%s'.", username))
-        } else {
-            JwtUserFactory.create(user)
-        }
+        } else user
     }
 
     @Throws(UsernameNotFoundException::class)

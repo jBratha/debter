@@ -27,11 +27,11 @@ class UserController (
 
     @GetMapping("/name/{user}")
     fun userInfo(@PathVariable("user") username: String): JwtUser {
-        return userService.findUserByName(username)
+        return userService.findJwtUserByName(username)
     }
 
     @GetMapping("/me")
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     fun currentUserInfo(): JwtUser {
         return userService.infoAboutYourself()
     }

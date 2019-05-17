@@ -3,6 +3,7 @@ package net.ddns.jaronsky.debter.rest.service
 import net.ddns.jaronsky.debter.model.Debt
 import net.ddns.jaronsky.debter.model.DebtStatus
 import net.ddns.jaronsky.debter.model.security.AuthorityName
+import net.ddns.jaronsky.debter.model.security.User
 import net.ddns.jaronsky.debter.rest.repository.DebtRepository
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.context.SecurityContextHolder
@@ -15,11 +16,13 @@ import org.springframework.stereotype.Service
 
 @Service
 class DebtService(
-        private val debtRepository: DebtRepository
+        private val debtRepository: DebtRepository,
+        private val userService: UserService
 ) {
 
     fun getMyDebts(): List<Debt> {
-        return getDebtsOfUser(SecurityContextHolder.getContext().authentication.name)
+        val user = userService.findUserByName(SecurityContextHolder.getContext().authentication.name)
+        return getDebtsOfUser(user)
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -27,7 +30,7 @@ class DebtService(
         return emptyList()
     }
 
-    fun getDebtsOfUser(user: String): List<Debt> {
+    fun getDebtsOfUser(user: User): List<Debt> {
         return debtRepository.findMyDebts(user)
     }
 

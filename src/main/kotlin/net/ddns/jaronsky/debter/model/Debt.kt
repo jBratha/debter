@@ -15,11 +15,11 @@ class Debt(
         @GeneratedValue
         var id: Long? = null,
 
-        @JoinColumn(name = "DEBTOR", referencedColumnName = "username")
+        @JoinColumn(name = "debtor", referencedColumnName = "id")
         @OneToOne
         val debtor: User? = null,
 
-        @JoinColumn(name = "CREDITOR", referencedColumnName = "username")
+        @JoinColumn(name = "creditor", referencedColumnName = "id")
         @OneToOne
         val creditor: User? = null,
         val amount: Double? = null,
