@@ -2,6 +2,7 @@ package net.ddns.jaronsky.debter.rest.service
 
 import net.ddns.jaronsky.debter.model.Debt
 import net.ddns.jaronsky.debter.model.DebtStatus
+import net.ddns.jaronsky.debter.model.dto.DebtDto
 import net.ddns.jaronsky.debter.model.security.AuthorityName
 import net.ddns.jaronsky.debter.model.security.User
 import net.ddns.jaronsky.debter.rest.repository.DebtRepository
@@ -35,7 +36,20 @@ class DebtService(
     }
 
 
-    fun saveDebt(debt: Debt): Debt {
+    fun saveDebt(debtDto: DebtDto): Debt {
+        val debtor = userService.findUserByName(debtDto.debtor)
+        val creditor = userService.findUserByName(debtDto.creditor)
+
+        val debt = Debt(
+                creditor = creditor,
+                debtor = debtor,
+                amount = debtDto.amount,
+                description = debtDto.description,
+                status = DebtStatus.NOT_CONFIRMED
+        )
+
+        debt.toConfirmBy = getOppositeUserOfDebt(debt)
+
         return debtRepository.save(debt)
     }
 
@@ -65,6 +79,9 @@ class DebtService(
         return isAdmin() || (debt.status === DebtStatus.CONFIRMED && debt.toConfirmBy === username)
     }
 
+    /**
+     * Returns Opposite user of debt, than already logged or creditor
+     */
     private fun getOppositeUserOfDebt(debt: Debt): String {
         return if (user().equals(debt.creditor?.username)) debt.debtor?.username!! else debt.creditor?.username!!
     }

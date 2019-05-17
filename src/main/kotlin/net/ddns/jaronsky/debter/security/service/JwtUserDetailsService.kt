@@ -61,6 +61,10 @@ class JwtUserDetailsService(
         return userRepository.findAll()
     }
 
+    fun getEnabledUsers(): List<User> {
+        return userRepository.findAll().filter { user -> user.authorities?.map { auth -> auth.name }!!.contains(AuthorityName.ROLE_USER) && user.enabled!! }
+    }
+
     fun registerUser(user: User) {
         val roles = authorityRepository.findAll()
         user.authorities = user.authorities?.map { it -> roles.first { role -> role.name == it.name } }

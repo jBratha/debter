@@ -1,6 +1,7 @@
 package net.ddns.jaronsky.debter.rest.controller
 
 import net.ddns.jaronsky.debter.model.Debt
+import net.ddns.jaronsky.debter.model.dto.DebtDto
 import net.ddns.jaronsky.debter.rest.service.DebtService
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
@@ -28,9 +29,9 @@ class DebtController(
     }
 
     @PostMapping
-    fun createDebt(@RequestBody @Valid debt: Debt) {
-        debtService.saveDebt(debt)
-        debtService.requestConfirmingDebt(debt.id!!)
+    fun createDebt(@RequestBody @Valid debt: DebtDto) {
+        val newDebt = debtService.saveDebt(debt)
+        debtService.requestConfirmingDebt(newDebt.id!!)
     }
 
 }

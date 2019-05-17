@@ -57,4 +57,8 @@ class UserService(
     fun findUserByName(name: String): User {
         return jwtUserDetailsService.getUserByName(name)
     }
+
+    fun findEnabledUsers(): List<String> {
+        return jwtUserDetailsService.getEnabledUsers().map { u -> u.username!! }
+    }
 }

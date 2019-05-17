@@ -17,12 +17,18 @@ class UserController (
         private var userService: UserService
 ){
 
-    @GetMapping
+    @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
-    fun listUser(): List<User> {
+    fun listUserForAdmin(): List<User> {
         val u = userService.findAll()
 //        u.forEach { user -> user.password = null }
         return u
+    }
+
+    @GetMapping
+    @PreAuthorize("isAuthenticated()")
+    fun listUser(): List<String> {
+        return userService.findEnabledUsers()
     }
 
     @GetMapping("/name/{user}")

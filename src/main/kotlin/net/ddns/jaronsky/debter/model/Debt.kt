@@ -12,7 +12,9 @@ import javax.persistence.*
 @Table(name = "DEBTS")
 class Debt(
         @Id
-        @GeneratedValue
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "debt_seq")
+        @SequenceGenerator(name = "debt_seq", sequenceName = "debt_seq", initialValue = 7) //TODO remove initialValue
+//        @GeneratedValue
         var id: Long? = null,
 
         @JoinColumn(name = "debtor", referencedColumnName = "id")
@@ -30,6 +32,15 @@ class Debt(
         var status: DebtStatus? = null,
         var toConfirmBy: String? = null
 ) {
+    companion object {
+//        fun newDebt(debtDTO: DebtDto){
+//            return Debt(
+//                    debtor = debtDTO.debtor,
+//                    creditor =
+//            )
+//        }
+    }
+
     override fun toString(): String {
         return "Debt[$id, $debtor jest winny $creditor, \'$description\', $status, $toConfirmBy]"
     }
