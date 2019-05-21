@@ -6,5 +6,5 @@ package net.ddns.jaronsky.debter.model
  */
 
 enum class DebtStatus {
-    NOT_CONFIRMED, CONFIRMED, RESOLVED
+    NOT_CONFIRMED, CONFIRMED, RESOLVED, CONFIRMED_TO_BE_RESOLVED
 }

@@ -24,6 +24,8 @@ class UserService(
         private val passwordEncoder: PasswordEncoder
 ) {
 
+    companion object : Log()
+
     @PreAuthorize("hasRole('ADMIN')")
     fun findAll(): List<User> {
         return jwtUserDetailsService.getAll()
@@ -40,10 +42,8 @@ class UserService(
         return jwtUser as JwtUser
     }
 
-    fun infoAboutYourself(): JwtUser {
-        val x = SecurityContextHolder.getContext().authentication.authorities.map { a -> a.authority!! }.contains(AuthorityName.ROLE_ADMIN.name)
-        System.err.println(x)
-        return jwtUserDetailsService.loadUserByUsername(SecurityContextHolder.getContext().authentication.name) as JwtUser
+    fun infoAboutYourself(): User {
+        return jwtUserDetailsService.getUserByUsername(SecurityContextHolder.getContext().authentication.name)
     }
 
     fun registerUser(user: RegisterUser) {
@@ -55,7 +55,7 @@ class UserService(
     }
 
     fun findUserByName(name: String): User {
-        return jwtUserDetailsService.getUserByName(name)
+        return jwtUserDetailsService.getUserByUsername(name)
     }
 
     fun findEnabledUsers(): List<String> {

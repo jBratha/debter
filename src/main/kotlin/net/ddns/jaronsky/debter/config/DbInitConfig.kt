@@ -32,9 +32,17 @@ class DbInitConfig(
     }
 
     @Bean
-    @Profile("mysql")
+    @Profile("dev && mysql")
     fun initWhenMysql() {
         val script = "data/data-mysql.sql"
+        logger.info("Initializing Mysql DB with script\'$script\'")
+        ScriptUtils.executeSqlScript(dataSource.connection, EncodedResource(ClassPathResource(script)))
+    }
+
+    @Bean
+    @Profile("prod && mysql")
+    fun initWhenMysql2() {
+        val script = "data/data-mysql-prod.sql"
         logger.info("Initializing Mysql DB with script\'$script\'")
         ScriptUtils.executeSqlScript(dataSource.connection, EncodedResource(ClassPathResource(script)))
     }

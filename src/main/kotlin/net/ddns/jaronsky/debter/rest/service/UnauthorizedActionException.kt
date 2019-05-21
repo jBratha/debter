@@ -5,4 +5,4 @@ package net.ddns.jaronsky.debter.rest.service
  *
  */
 
-class SelfConfirmException(s: String) : RuntimeException(s)
+class UnauthorizedActionException(s: String) : RuntimeException(s)

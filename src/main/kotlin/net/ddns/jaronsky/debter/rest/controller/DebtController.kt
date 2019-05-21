@@ -23,9 +23,14 @@ class DebtController(
         return debtService.getMyDebts()
     }
 
-    @GetMapping("/confirm/{id}")
-    fun confirmDebt(@PathVariable id: Number) {
+    @GetMapping("/{id}/confirm")
+    fun confirmDebt(@PathVariable id: Long) {
         debtService.confirmDebt(id)
+    }
+
+    @GetMapping("/{id}/resolve")
+    fun resolveDebt(@PathVariable id: Long) {
+        debtService.requestOrResolveDebt(id)
     }
 
     @PostMapping
@@ -33,5 +38,13 @@ class DebtController(
         val newDebt = debtService.saveDebt(debt)
         debtService.requestConfirmingDebt(newDebt.id!!)
     }
+
+//    @GetMapping("")
+//    fun requestResolvingDebt(@PathVariable id: Long) {
+//        debtService.requestResolvingDebt(id)
+//    }
+
+
+
 
 }

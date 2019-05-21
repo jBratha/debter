@@ -68,15 +68,15 @@ class DebtService(
     }
 
     private fun hasAccessToDebt(username: String, debt: Debt): Boolean {
-        return isAdmin() || debt.creditor?.username === username || debt.debtor?.username === username
+        return isAdmin() || debt.creditor?.username.equals(username) || debt.debtor?.username.equals(username)
     }
 
     private fun canConfirmDebt(username: String, debt: Debt): Boolean {
-        return isAdmin() || (debt.status === DebtStatus.NOT_CONFIRMED && debt.toConfirmBy === username)
+        return isAdmin() || (debt.status!!.equals(DebtStatus.NOT_CONFIRMED) && debt.toConfirmBy.equals(username))
     }
 
     private fun canResolveDebt(username: String, debt: Debt): Boolean {
-        return isAdmin() || (debt.status === DebtStatus.CONFIRMED && debt.toConfirmBy === username)
+        return isAdmin() || (debt.status!!.equals(DebtStatus.CONFIRMED_TO_BE_RESOLVED) && debt.toConfirmBy.equals(username))
     }
 
     /**
@@ -94,12 +94,11 @@ class DebtService(
         }
     }
 
-    fun confirmDebt(id: Number) {
-        val debt = debtRepository.findById(id as Long).get()
+    fun confirmDebt(id: Long) {
+        val debt = debtRepository.findById(id).get()
         if (hasAccessToDebt(user(), debt)) {
             if (!canConfirmDebt(user(), debt)) {
-                System.err.println("${user()} nie może sam sobie potwierdzić długu !")
-                throw SelfConfirmException("${user()} nie może sam sobie potwierdzić długu !")
+                throw UnauthorizedActionException("${user()} nie może sam sobie potwierdzić długu !")
             }
             debt.toConfirmBy = null
             debt.status = DebtStatus.CONFIRMED
@@ -107,25 +106,37 @@ class DebtService(
         }
     }
 
-    fun requestResolvingDebt(id: Number) {
-        val debt = debtRepository.findById(id as Long).get()
+    fun requestResolvingDebt(debt: Debt) {
         if (hasAccessToDebt(user(), debt)) {
             debt.toConfirmBy = getOppositeUserOfDebt(debt)
+            debt.status = DebtStatus.CONFIRMED_TO_BE_RESOLVED
             debtRepository.save(debt)
         }
     }
 
-    fun resolveDebt(id: Number) {
-        val debt = debtRepository.findById(id as Long).get()
+    fun requestOrResolveDebt(id: Long) {
+        val debt = debtRepository.findById(id).get()
+        when (debt.status) {
+            DebtStatus.CONFIRMED_TO_BE_RESOLVED -> {
+                resolveDebt(debt)
+            }
+            DebtStatus.CONFIRMED -> {
+                requestResolvingDebt(debt)
+            }
+            else -> {
+                throw UnauthorizedActionException("Niepoprawny status długu: '${debt.status}'")
+            }
+        }
+    }
+
+    fun resolveDebt(debt: Debt) {
         if (hasAccessToDebt(user(), debt)) {
             if (!canResolveDebt(user(), debt)) {
-                System.err.println("${user()} nie może sam sobie rozwiązać długu !")
-                throw SelfConfirmException("${user()} nie może sam sobie rozwiązać długu !")
+                throw UnauthorizedActionException("${user()} nie może sam sobie unieważnić długu !")
             }
             debt.toConfirmBy = null
             debt.status = DebtStatus.RESOLVED
             debtRepository.save(debt)
         }
     }
-
 }

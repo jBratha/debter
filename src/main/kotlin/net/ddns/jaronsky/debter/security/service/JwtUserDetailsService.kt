@@ -27,7 +27,7 @@ class JwtUserDetailsService(
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(username: String): UserDetails {
-        return JwtUserFactory.create(getUserByName(username))
+        return JwtUserFactory.create(getUserByUsername(username))
 
 //        val user = userRepository.findByUsername(username)
 //
@@ -38,7 +38,7 @@ class JwtUserDetailsService(
 //        }
     }
 
-    fun getUserByName(username: String): User {
+    fun getUserByUsername(username: String): User {
         val user = userRepository.findByUsername(username)
 
         return if (user == null) {

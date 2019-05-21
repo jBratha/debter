@@ -38,7 +38,7 @@ class UserController (
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
-    fun currentUserInfo(): JwtUser {
+    fun currentUserInfo(): User {
         return userService.infoAboutYourself()
     }
 
