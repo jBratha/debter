@@ -1,6 +1,7 @@
 package net.ddns.jaronsky.debter.security.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.ConstructorBinding
 
 /**
  * Created by Wojciech Jaronski
@@ -8,19 +9,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties
  */
 //@Configuration
 //@Component
+@ConstructorBinding
 @ConfigurationProperties(prefix = "jwt")
-class JwtProperties(
+data class JwtProperties (
         val header: String,
-        val route: Route,
+        val secret: String,
         val expiration: String,
-        val secret: String
+        val route: Route
+
 )
 
-class Route(
-        val authentication: Authentication
-)
 
-class Authentication(
-        val path: String,
-        val refresh: String
-)

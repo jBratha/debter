@@ -123,6 +123,7 @@ class WebSecurityConfig(
                 .antMatchers(
                         HttpMethod.POST,
                         jwtProperties.route.authentication.path
+//                        jwtProperties.routeAuthPath
                 )
 
                 // allow anonymous resource requests
