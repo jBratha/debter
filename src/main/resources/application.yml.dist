@@ -47,17 +47,3 @@ jwt:
     authentication:
       path: auth
       refresh: refresh
----
-spring:
-  profiles: ssl
-server:
-  port: 8085
-  tomcat.remote_ip_header: x-forwarded-for
-  tomcat.protocol_header: x-forwarded-proto
-  ssl:
-    key-password:
-    key-store:
-    key-store-type:
-    key-store-password:
-    key-alias: tomcat
-http.port: 8086

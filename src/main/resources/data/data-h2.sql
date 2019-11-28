@@ -33,17 +33,24 @@ VALUES (2, 1);
 -- INSERT INTO USER_AUTHORITY (USER_ID, AUTHORITY_ID) VALUES (3, 1);
 
 
-INSERT INTO DEBTS (ID, DEBTOR, CREDITOR, AMOUNT, DESCRIPTION, STATUS, TO_CONFIRM_BY)
-VALUES (1, 'admin', 'user', 7.6, 'za kino', 'CONFIRMED', null);
-INSERT INTO DEBTS (ID, DEBTOR, CREDITOR, AMOUNT, DESCRIPTION, STATUS, TO_CONFIRM_BY)
-VALUES (2, 'admin', 'user', 12.3, '10 maja - impreza', 'RESOLVED', null);
-INSERT INTO DEBTS (ID, DEBTOR, CREDITOR, AMOUNT, DESCRIPTION, STATUS, TO_CONFIRM_BY)
-VALUES (3, 'admin', 'user', 5.5, 'urodziny testera', 'NOT_CONFIRMED', 'admin');
-INSERT INTO DEBTS (ID, DEBTOR, CREDITOR, AMOUNT, DESCRIPTION, STATUS, TO_CONFIRM_BY)
-VALUES (4, 'user', 'admin', 8.4, 'bo tak', 'RESOLVED', null);
-INSERT INTO DEBTS (ID, DEBTOR, CREDITOR, AMOUNT, DESCRIPTION, STATUS, TO_CONFIRM_BY)
-VALUES (5, 'user', 'admin', 25.2, 'odsetki', 'CONFIRMED', null);
-INSERT INTO DEBTS (ID, DEBTOR, CREDITOR, AMOUNT, DESCRIPTION, STATUS, TO_CONFIRM_BY)
-VALUES (6, 'user', 'admin', 14.1, 'za robotę', 'NOT_CONFIRMED', 'admin');
--- INSERT INTO DEBTS (ID, DEBTOR, CREDITOR, AMOUNT, DESCRIPTION, STATUS) VALUES (3, 'user', 'user', 7.3, 't3', 'RESOLVED');
--- INSERT INTO DEBTS (ID, DEBTOR, CREDITOR, AMOUNT, DESCRIPTION, STATUS) VALUES (4, 'admin', 'admin', 8.4, 't4', 'CONFIRMED');
+select @kator_id := id
+from user
+where username = 'admin';
+
+select @user_id := id
+from user
+where username = 'user';
+
+INSERT INTO debts (id, debtor, creditor, amount, description, status, to_confirm_by)
+VALUES (1, @kator_id, @user_id, 7.6, 'za kino', 'CONFIRMED', null);
+INSERT INTO debts (id, debtor, creditor, amount, description, status, to_confirm_by)
+VALUES (2, @kator_id, @user_id, 12.3, '10 maja - impreza', 'RESOLVED', null);
+INSERT INTO debts (id, debtor, creditor, amount, description, status, to_confirm_by)
+VALUES (3, @kator_id, @user_id, 5.5, 'urodziny testera', 'NOT_CONFIRMED', 'kator');
+INSERT INTO debts (id, debtor, creditor, amount, description, status, to_confirm_by)
+VALUES (4, @user_id, @kator_id, 8.4, 'bo tak', 'RESOLVED', null);
+INSERT INTO debts (id, debtor, creditor, amount, description, status, to_confirm_by)
+VALUES (5, @user_id, @kator_id, 25.2, 'odsetki', 'CONFIRMED', null);
+INSERT INTO debts (id, debtor, creditor, amount, description, status, to_confirm_by)
+VALUES (6, @user_id, @kator_id, 14.1, 'za robotę', 'NOT_CONFIRMED', 'user');
+
